@@ -1,0 +1,39 @@
+server:
+  port: 8000
+eureka:
+  instance:
+    hostname: localhost                   #\uC708\uB3C4\uC6B0 \uACBD\uC6B0 \uD544\uC694
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
+
+      routes:
+        - id: membership-service
+#          uri: http://localhost:8080/
+          uri: lb://MEMBERSHIP-SERVICE
+          predicates:
+            - Path=/membership-service/**
+          filters:
+            - RewritePath=/membership-service/(?<segment>.*), /$\{segment}
+
+        - id: lol-service
+#          uri: http://localhost:8081/
+          uri: lb://LOL-SERVICE
+          predicates:
+            - Path=/lol-service/**
+          filters:
+            - RewritePath=/lol-service/(?<segment>.*), /$\{segment}
