@@ -9,6 +9,11 @@ eureka:
     service-url:
       defaultZone : http://localhost:8761/eureka
 
+token:
+  expiration-time : 3600000
+  secret-key: ENC(zehmic1AsPolW19uG2XQ7Jgaa0Z1kUHZ)
+  logout-token-expiration-time : 3600
+
 spring:
   application:
     name: apigateway-service
@@ -37,3 +42,4 @@ spring:
             - Path=/lol-service/**
           filters:
             - RewritePath=/lol-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
